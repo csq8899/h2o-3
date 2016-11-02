@@ -166,7 +166,7 @@ public enum GlrmLoss {
     }
     // this function performs the same function as the one above but it is memory optimized for the original
     // GLRM.java code.  See GLRM.java for details
-    @Override public double mloss(double[] u, int a, int u_len) {
+    @Override public double mloss2(double[] u, int a, int u_len) {
       if (!(a >= 0 && a < u_len))
         throw new IndexOutOfBoundsException("a must be between 0 and " + (u_len - 1));
       double sum = 0;
@@ -184,7 +184,7 @@ public enum GlrmLoss {
       grad[a] = (1 - u[a] > 0) ? -1 : 0;
       return grad;
     }
-    @Override public double[] mlgrad(double[] u, int a, double[] grad, int u_len) {
+    @Override public double[] mlgrad2(double[] u, int a, double[] grad, int u_len) {
       if (!(a >= 0 && a < u_len)) throw new IndexOutOfBoundsException("a must be between 0 and " + (u_len - 1));
 //      double[] grad = new double[u_len];
       for (int i = 0; i < u_len; i++)
@@ -209,7 +209,7 @@ public enum GlrmLoss {
         sum += a > i ? Math.max(1 - u[i], 0) : 1;
       return sum;
     }
-    @Override public double mloss(double[] u, int a, int u_len) {
+    @Override public double mloss2(double[] u, int a, int u_len) {
       if (!(a >= 0 && a < u_len)) throw new IndexOutOfBoundsException("a must be between 0 and " + (u_len - 1));
       double sum = 0;
       for (int i = 0; i < u_len - 1; i++)
@@ -223,7 +223,7 @@ public enum GlrmLoss {
         grad[i] = (a > i && 1 - u[i] > 0) ? -1 : 0;
       return grad;
     }
-    @Override public double[] mlgrad(double[] u, int a, double[] grad, int u_len) {
+    @Override public double[] mlgrad2(double[] u, int a, double[] grad, int u_len) {
       if (!(a >= 0 && a < u_len)) throw new IndexOutOfBoundsException("a must be between 0 and " + (u_len - 1));
  //     double[] grad = new double[u_len];
       for (int i = 0; i < u_len - 1; i++)
@@ -267,13 +267,13 @@ public enum GlrmLoss {
   public double mloss(double[] u, int a) { throw new UnsupportedOperationException(); }
 
   /** Loss function for categorical variables performing same function as mloss above but with more arguments */
-  public double mloss(double[] u, int a, int u_len) { throw new UnsupportedOperationException(); }
+  public double mloss2(double[] u, int a, int u_len) { throw new UnsupportedOperationException(); }
 
   /** \grad_u L(u,a): Gradient of multidimensional loss function with respect to u */
   public double[] mlgrad(double[] u, int a) { throw new UnsupportedOperationException(); }
 
   /** \grad_u L(u,a): Gradient of multidimensional loss function with respect to u */
-  public double[] mlgrad(double[] u, int a, double[] prod, int u_len) { throw new UnsupportedOperationException(); }
+  public double[] mlgrad2(double[] u, int a, double[] prod, int u_len) { throw new UnsupportedOperationException(); }
 
   /** \argmin_a L(u, a): Data imputation for categorical values {0, 1, 2, ...} */
   public int mimpute(double[] u) { throw new UnsupportedOperationException(); }

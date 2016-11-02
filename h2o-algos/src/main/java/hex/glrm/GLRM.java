@@ -1170,7 +1170,7 @@ public class GLRM extends ModelBuilder<GLRMModel, GLRMModel.GLRMParameters, GLRM
           }
 
           // Gradient wrt x_i is matrix product \grad L_{i,j}(x_i * Y_j, A_{i,j}) * Y_j'
-          double[] weight = _lossFunc[j].mlgrad(xy, (int) a[j], prod,_yt._numLevels[j]);
+          double[] weight = _lossFunc[j].mlgrad2(xy, (int) a[j], prod,_yt._numLevels[j]);
           if (_yt._transposed) {
             for (int c = 0; c < _yt._numLevels[j]; c++) {
               int cidx = _yt.getCatCidx(j, c);
@@ -1223,7 +1223,7 @@ public class GLRM extends ModelBuilder<GLRMModel, GLRMModel.GLRMParameters, GLRM
         for (int j = 0; j < _ncats; j++) {
           if (Double.isNaN(a[j])) continue;   // Skip missing observations in row
           double[] txy = multVecArrFast(xnew, prod, _yt, j);
-          _loss +=  _lossFunc[j].mloss(txy, (int) a[j], _yt._numLevels[j]);
+          _loss +=  _lossFunc[j].mloss2(txy, (int) a[j], _yt._numLevels[j]);
         }
 
         // Numeric columns
@@ -1333,7 +1333,7 @@ public class GLRM extends ModelBuilder<GLRMModel, GLRMModel.GLRMParameters, GLRM
           }
 
           // Gradient for level p is x_i weighted by \grad_p L_{i,j}(x_i * Y_j, A_{i,j})
-          double[] weight = _lossFunc[j].mlgrad(xy, (int)a, grad, _ytold._numLevels[j]);
+          double[] weight = _lossFunc[j].mlgrad2(xy, (int)a, grad, _ytold._numLevels[j]);
           for (int level = 0; level < _ytold._numLevels[j]; level++) {
             for (int k = 0; k < _ncolX; k++)
               _ytnew[_ytold.getCatCidx(j, level)][k] += cweight * weight[level] * chk_xnew(cs, k).atd(row);
@@ -1461,7 +1461,7 @@ public class GLRM extends ModelBuilder<GLRMModel, GLRMModel.GLRMParameters, GLRM
               xy[level] += chk_xnew(cs, k).atd(row) * _yt.getCat(j, level, k);
             }
           }
-          _loss += _lossFunc[j].mloss(xy, (int)a, _yt._numLevels[j]);
+          _loss += _lossFunc[j].mloss2(xy, (int)a, _yt._numLevels[j]);
         }
 
         // Numeric columns
